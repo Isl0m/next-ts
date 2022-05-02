@@ -1,5 +1,6 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { Stack, Paper, Typography } from '@mui/material';
+import { Stack, Paper, Typography, Button } from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
 
 import MInput from '../MInput';
 import PasswordField from '../MInput/PasswordField';
@@ -56,7 +57,9 @@ const SignUp: React.FC = () => {
               },
             }}
           />
-          <input type="submit" />
+          <Button variant="contained" type="submit" endIcon={<SendIcon />}>
+            Отправить
+          </Button>
         </Stack>
       </form>
     </Paper>
