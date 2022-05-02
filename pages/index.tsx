@@ -17,10 +17,10 @@ const Home: NextPage = () => {
       </Typography>
       <Stack direction="row" justifyContent="center" spacing={2}>
         <Link href="/auth/signup" passHref>
-          <Button variant="outlined" >Sign Up</Button>
+          <Button variant="outlined" >Регистрация</Button>
         </Link>
         <Link href="/auth/signin" passHref>
-          <Button variant="outlined" >Sign In</Button>
+          <Button variant="outlined" >Войти</Button>
         </Link>
       </Stack>
     </>
