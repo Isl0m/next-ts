@@ -62,8 +62,8 @@ const SignUp: React.FC = () => {
           </Button>
           <Typography align="center" variant="h6" component="div">
             Уже есть аккаунт?{' '}
-            <Link href="./auth/signin">
-              <a style={{ color: 'blue' }}>Войти</a>
+            <Link href="/auth/signin">
+              <a style={{ color: '#1976d2' }}>Войти</a>
             </Link>
           </Typography>
         </Stack>
