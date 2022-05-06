@@ -1,18 +1,52 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Stack, Paper, Typography, Button } from '@mui/material';
+import { getAuth, signInWithEmailAndPassword } from 'firebase/auth';
+import { getDatabase, ref, child, get } from 'firebase/database';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import MInput from '../MInput';
 import PasswordField from '../MInput/PasswordField';
 import { IFormInput } from './signup.interface';
-import Link from 'next/link';
+
+import { setUser } from '../../store/slices/userSlice';
+import { useAppDispatch } from '../../hooks/redux-hooks';
 
 const SignIn: React.FC = () => {
-  const { control, handleSubmit } = useForm<IFormInput>({
+  const route = useRouter();
+  const dispatch = useAppDispatch();
+  const { control, handleSubmit, reset } = useForm<IFormInput>({
     mode: 'onChange',
   });
 
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<IFormInput> = ({ email, password }) => {
+    const auth = getAuth();
+    const dbRef = ref(getDatabase());
+    signInWithEmailAndPassword(auth, email, password)
+      .then(({ user }) => {
+        get(child(dbRef, `users/${user.uid}`))
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              dispatch(
+                setUser({
+                  name: snapshot.val().name,
+                  email: user.email,
+                  id: user.uid,
+                  token: user.refreshToken,
+                })
+              );
+            } else {
+              console.log('No data available');
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+        reset();
+        alert('Вошли в систему');
+        route.push('/');
+      })
+      .catch(() => alert('Invalid user!'));
   };
 
   return (

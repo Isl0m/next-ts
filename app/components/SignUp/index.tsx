@@ -1,19 +1,48 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { Stack, Paper, Typography, Button } from '@mui/material';
+import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth';
+import { getDatabase, ref, set } from 'firebase/database';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 import MInput from '../MInput';
 import PasswordField from '../MInput/PasswordField';
 import { IFormInput } from './signup.interface';
 import { emailRegex, passwordRegex } from '../../const';
 
+import { setUser } from '../../store/slices/userSlice';
+import { useAppDispatch } from '../../hooks/redux-hooks';
+
 const SignUp: React.FC = () => {
-  const { control, handleSubmit } = useForm<IFormInput>({
+  const dispatch = useAppDispatch();
+  const router = useRouter();
+  const { control, handleSubmit, reset } = useForm<IFormInput>({
     mode: 'onChange',
   });
 
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<IFormInput> = ({ name, email, password }) => {
+    const auth = getAuth();
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(({ user }) => {
+        console.log(user);
+        dispatch(
+          setUser({
+            name: name,
+            email: user.email,
+            id: user.uid,
+            token: user.refreshToken,
+          })
+        );
+        const db = getDatabase();
+        set(ref(db, 'users/' + user.uid), {
+          username: name,
+          email: email,
+        });
+      })
+      .catch(console.error);
+
+    router.push('/');
+    reset();
   };
 
   return (
@@ -53,7 +82,7 @@ const SignUp: React.FC = () => {
               pattern: {
                 value: passwordRegex,
                 message:
-                  'Пароль должен содержать не менее 6 символов, включая одну заглавную букву, одну строчную букву, одну цифру и один спецсимвол',
+                  'Пароль должен содержать не менее 8 символов, включая одну строчную букву и одну цифру ',
               },
             }}
           />
