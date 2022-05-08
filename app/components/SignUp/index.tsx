@@ -35,7 +35,7 @@ const SignUp: React.FC = () => {
         );
         const db = getDatabase();
         set(ref(db, 'users/' + user.uid), {
-          username: name,
+          name: name,
           email: email,
         });
       })
