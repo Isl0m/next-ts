@@ -22,6 +22,7 @@ import { setUser } from '../../store/slices/userSlice';
 export interface IProfilePageProps {
   name: string;
   email: string;
+  id:string;
 }
 interface IFormInput {
   name: string;
