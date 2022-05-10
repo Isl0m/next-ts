@@ -11,12 +11,12 @@ import { IFormInput } from './signup.interface';
 import { emailRegex, passwordRegex } from '../../const';
 
 import { setUser } from '../../store/slices/userSlice';
-import { useAppDispatch } from '../../hooks/redux-hooks';
+import { useAppDispatch } from '../../hooks';
 
 const SignUp: React.FC = () => {
   const dispatch = useAppDispatch();
   const router = useRouter();
-  const { control, handleSubmit, reset } = useForm<IFormInput>({
+  const { control, handleSubmit } = useForm<IFormInput>({
     mode: 'onChange',
   });
 
@@ -42,7 +42,6 @@ const SignUp: React.FC = () => {
       .catch(console.error);
 
     router.push('/');
-    reset();
   };
 
   return (

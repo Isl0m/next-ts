@@ -10,12 +10,12 @@ import PasswordField from '../MInput/PasswordField';
 import { IFormInput } from './signup.interface';
 
 import { setUser } from '../../store/slices/userSlice';
-import { useAppDispatch } from '../../hooks/redux-hooks';
+import { useAppDispatch } from '../../hooks';
 
 const SignIn: React.FC = () => {
   const route = useRouter();
   const dispatch = useAppDispatch();
-  const { control, handleSubmit, reset } = useForm<IFormInput>({
+  const { control, handleSubmit } = useForm<IFormInput>({
     mode: 'onChange',
   });
 
@@ -42,7 +42,6 @@ const SignIn: React.FC = () => {
           .catch((error) => {
             console.error(error);
           });
-        reset();
         alert('Вошли в систему');
         route.push('/');
       })

@@ -10,9 +10,13 @@ import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 
+import { useAuth } from '../../../hooks/useAuth';
+import Avatar from '../../Avatar';
+
 export default function Header() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const router = useRouter();
+  const { isAuth, name } = useAuth();
   const isMenuOpen = Boolean(anchorEl);
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -81,7 +85,11 @@ export default function Header() {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <AccountCircle sx={{ width: 36, height: 36 }} />
+              {isAuth ? (
+                <Avatar name={name} style={{ width: 36, height: 36 }} />
+              ) : (
+                <AccountCircle sx={{ width: 36, height: 36 }} />
+              )}
             </IconButton>
           </Box>
         </Toolbar>
