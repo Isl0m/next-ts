@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import type { NextPage } from 'next';
@@ -8,10 +9,12 @@ import { useAuth } from '../app/hooks/useAuth';
 const Profile: NextPage = () => {
   const router = useRouter();
   const userInfo = useAuth();
+
   if (!userInfo.isAuth) {
-    router.back();
+    router.push('/');
     return null;
   }
+
   return (
     <>
       <Head>

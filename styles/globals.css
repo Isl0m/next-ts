@@ -15,3 +15,6 @@ a {
 * {
   box-sizing: border-box;
 }
+.MuiDialogTitle-root + .css-ypiqx9-MuiDialogContent-root {
+  padding-top: 20px;
+}

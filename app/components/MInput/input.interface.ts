@@ -14,6 +14,7 @@ export interface ICustomRule {
     name: 'name' | 'email' | 'password';
     label: string;
     control: Control<IFormInput, any>;
+    value?: string ;
     customRule?: ICustomRule;
   }
   

@@ -18,53 +18,64 @@ import { getDatabase, ref, set } from 'firebase/database';
 import Avatar from '../Avatar';
 import MInput from '../MInput';
 import { useAppDispatch } from '../../hooks';
-import { setUser } from '../../store/slices/userSlice';
+import { changeName } from '../../store/slices/userSlice';
 export interface IProfilePageProps {
   name: string;
   email: string;
-  id:string;
+  id: string;
 }
 interface IFormInput {
   name: string;
 }
-const ProfilePage: React.FC<IProfilePageProps> = ({ name, email, id }) => {
+const ProfilePage: React.FC<IProfilePageProps> = ({
+  name: startName,
+  email,
+  id,
+}) => {
   const [open, setOpen] = useState<boolean>(false);
   const dispatch = useAppDispatch();
-  const { control, handleSubmit } = useForm<IFormInput>({
+  const { control, handleSubmit, reset } = useForm<IFormInput>({
     mode: 'onChange',
   });
 
   const handleClickOpen = () => {
     setOpen(true);
+    reset();
   };
 
   const handleClose = () => {
     setOpen(false);
+    reset();
   };
 
-  const onSubmit: SubmitHandler<IFormInput> = ({ name }) => {
-    dispatch(
-      setUser({
+  const handleSubmitName = () => {
+    handleSubmit(({ name }) => {
+      console.log(name);
+      dispatch(changeName(name));
+      const db = getDatabase();
+      set(ref(db, 'users/' + id), {
+        email: email,
         name: name,
-      })
-    );
-    const db = getDatabase();
-    set(ref(db, 'users/' + id), {
-      name: name,
-    });
+      });
+    })();
+    setOpen(false);
+    reset();
   };
+
   return (
     <Paper
       elevation={3}
       sx={{ maxWidth: '40%', mx: 'auto', mt: '4vh', p: '1rem' }}
     >
       <Stack spacing={2} justifyContent="center" alignItems="center">
-        <Avatar
-          name={name}
-          style={{ width: 80, height: 80, fontSize: '2.5rem' }}
-        />
+        {startName && (
+          <Avatar
+            name={startName}
+            style={{ width: 80, height: 80, fontSize: '2.5rem' }}
+          />
+        )}
         <Stack direction="row" justifyContent="center" alignItems="center">
-          <Typography variant="h4">{name}</Typography>
+          <Typography variant="h4">{startName}</Typography>
           <IconButton onClick={handleClickOpen}>
             <EditIcon />
           </IconButton>
@@ -80,6 +91,7 @@ const ProfilePage: React.FC<IProfilePageProps> = ({ name, email, id }) => {
           <MInput
             name="name"
             label="Введите имя"
+            value={startName}
             control={control}
             customRule={{
               required: 'Поле обязательно для заполнения',
@@ -89,7 +101,7 @@ const ProfilePage: React.FC<IProfilePageProps> = ({ name, email, id }) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Отмена</Button>
-          <Button onClick={handleClose}>Поменять</Button>
+          <Button onClick={handleSubmitName}>Поменять</Button>
         </DialogActions>
       </Dialog>
     </Paper>

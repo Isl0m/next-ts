@@ -13,7 +13,7 @@ const Home: NextPage = () => {
       </Head>
 
       <Typography align="center" variant="h2" component="div" gutterBottom>
-        It is Home Page
+        Главная страница
       </Typography>
       <Stack direction="row" justifyContent="center" spacing={2}>
         <Link href="/auth/signup" passHref>
